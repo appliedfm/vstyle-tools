@@ -1,0 +1,19 @@
+(lang dune 2.9)
+(name coq-fmt)
+(version 0.0.1)
+
+(generate_opam_files true)
+(source (github appliedfm/vstyle-tools))
+(license MIT)
+(authors "Tim Carstens" "appliedfm")
+(maintainers "appliedfm")
+
+(package
+ (name coq-fmt)
+ (synopsis "A source formatter for Coq")
+ (description "A source formatter for Coq, built to support https://vstyle.readthedocs.io")
+ (depends
+  (coq-serapi (>= 8.14.0+0.14.0))
+  (dune (> 1.5))
+  (stdio (>= v0.14.0))
+))
