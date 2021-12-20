@@ -1,5 +1,7 @@
 # vstyle-tools
 
+**This project is under development and not ready for use.**
+
 A formatter/linter for Coq source.
 
 https://vstyle.readthedocs.io
