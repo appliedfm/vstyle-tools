@@ -67,7 +67,7 @@ let driver debug disallow_sprop async async_workers error_recovery quick coq_pat
 
   (* main loop *)
   let in_chan = open_in in_file in
-  let doc, _sid = Coqfmt_format.format_doc ~in_file ~in_chan ~doc ~sid in
+  let doc, _sid = Formatter.format_doc ~in_file ~in_chan ~doc ~sid in
   let pstate = match Stm.state_of_id ~doc sid with `Valid (Some { Vernacstate.lemmas; _ }) -> lemmas | _ -> None in
   let () = close_document ~doc ~pstate in
   ()
@@ -80,7 +80,7 @@ let fatal_exn exn info =
 
 let main () =
   let coqfmt_cmd =
-    let open Coqfmt_arg in
+    let open Arg in
     ( Cmdliner.Term.(
         const driver $ debug $ disallow_sprop $ async $ async_workers $ error_recovery $ quick $ prelude
         $ ml_include_path $ load_path $ rload_path $ input_file $ omit_loc $ omit_att $ omit_env $ exn_on_opaque),

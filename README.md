@@ -8,13 +8,13 @@ https://vstyle.readthedocs.io
 
 ```console
 $ dune build
-$ ./_build/default/src/coqfmt.exe --help
+$ ./_build/default/src/coqformat.exe --help
 ```
 
 # Example
 
 ```console
-$ ./_build/default/src/coqfmt.exe examples/Foo.v
+$ ./_build/default/src/coqformat.exe examples/Foo.v
 ```
 
 # Formatting the source

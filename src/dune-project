@@ -1,5 +1,5 @@
 (lang dune 2.9)
-(name coq-fmt)
+(name coq-vstyle)
 (version 0.0.1)
 
 (generate_opam_files true)
@@ -9,7 +9,7 @@
 (maintainers "appliedfm")
 
 (package
- (name coq-fmt)
+ (name coq-vstyle)
  (synopsis "A source formatter for Coq")
  (description "A source formatter for Coq, built to support https://vstyle.readthedocs.io")
  (depends
