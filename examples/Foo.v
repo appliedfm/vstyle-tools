@@ -18,9 +18,9 @@ Definition add_em (x y: nat):
  := x + y
 .
 
-Arguments add_em [_].
+Definition add_em_2 x := add_em x.
 
-Definition add_em_2 := add_em.
+Arguments add_em [_].
 
 From Coq Require Import Lists.List.
 Import ListNotations.
@@ -51,3 +51,11 @@ Definition negative_sixteen: Z := -0X1_0.
 Require Import Coq.Floats.Floats.
 
 Definition fiftytwo: float := 5.2e1.
+
+Definition fiftytwo_2: float := 5.2E1.
+
+Definition fifty: float := 5E1.
+
+From Coq Require Import Strings.String.
+
+Definition a_string: string := ("foo")%string.
