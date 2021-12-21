@@ -9,18 +9,21 @@ https://vstyle.readthedocs.io
 # Building & running
 
 ```console
-$ dune build
-$ ./_build/default/src/coqformat.exe --help
+$ cd src
+/src$ dune build
+/src$ ./_build/default/coqformat.exe --help
 ```
 
 # Example
 
 ```console
-$ ./_build/default/src/coqformat.exe examples/Foo.v
+$ cd src
+/src$ ./_build/default/coqformat.exe ../examples/Foo.v
 ```
 
 # Formatting the source
 
 ```console
-$ dune build @fmt --auto-promote
+$ cd src
+/src$ dune build @fmt --auto-promote
 ```
