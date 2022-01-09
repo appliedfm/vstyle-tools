@@ -32,5 +32,7 @@ let format_doc ~style ~in_file ~in_chan ~doc ~sid =
   with
   (* | Stack.Empty -> *)
   | End_of_input ->
-      out_doc#fmt ~ppf:Format.std_formatter ~style;
+      let ppf = Format.std_formatter in
+      out_doc#fmt ~ppf ~style;
+      Format.pp_print_newline ppf ();
       !stt

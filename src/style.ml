@@ -4,12 +4,14 @@ open Format
 type node_ty =
   | NodeTy_Doc
   | NodeTy_Body
+  | NodeTy_Component
   | NodeTy_Vernac
 
 let pp_node_ty ppf =
   function
   | NodeTy_Doc -> pp_print_string ppf "doc"
   | NodeTy_Body -> pp_print_string ppf "body"
+  | NodeTy_Component -> pp_print_string ppf "component"
   | NodeTy_Vernac -> pp_print_string ppf "vernac"
 
 type element = {

@@ -13,6 +13,15 @@ class doc_node :
     method fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> ctx:Style.context -> unit
   end;;
 
+type grouping =
+  | GBody of Style_group.body_node
+  | GComponent of Style_group.component_node
+
+exception WrongGrouping
+val as_grouping : grouping -> Style_group.grouping_node
+val as_body : grouping -> Style_group.body_node
+val as_component : grouping -> Style_group.component_node
+
 class doctree :
   object
     method fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> unit

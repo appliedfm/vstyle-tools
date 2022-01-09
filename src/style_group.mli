@@ -5,9 +5,7 @@ class virtual grouping_node :
   object
     inherit node
 
-    val children : node Queue.t
-
-    method add_child : node -> unit
+    method virtual add_child : node -> unit
 
     method get_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
 
@@ -19,13 +17,22 @@ class body_node :
   object
     inherit grouping_node
 
-    val css_indent : int
+    method add_child : node -> unit
+    method has_children : bool
 
-    val mutable header : node option
-    val mutable footer : node option
+    method get_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
 
-    method set_header : Style.node -> unit
-    method set_footer : Style.node -> unit
+    method fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> ctx:context -> unit
+  end
+
+class component_node :
+  string list ->
+  object
+    inherit grouping_node
+
+    method set_header : node -> unit
+    method add_child : node -> unit
+    method set_footer : node -> unit
 
     method get_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
 

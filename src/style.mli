@@ -1,6 +1,7 @@
 type node_ty =
   | NodeTy_Doc
   | NodeTy_Body
+  | NodeTy_Component
   | NodeTy_Vernac
 
 val pp_node_ty : Format.formatter -> node_ty -> unit
@@ -19,7 +20,7 @@ class virtual node :
   object
     val el : element
 
-    val css_tab_spaces : int
+    val mutable css_tab_spaces : int
 
     method get_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
 
