@@ -25,5 +25,5 @@ val as_component : grouping -> Style_group.component_node
 class doctree :
   object
     method fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> unit
-    method add_vernac : Vernacexpr.vernac_control_r CAst.t -> unit
+    method add_vernac : Proof.t option -> Vernacexpr.vernac_control_r CAst.t -> unit
   end;;

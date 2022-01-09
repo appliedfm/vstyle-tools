@@ -23,13 +23,14 @@ class body_node cls =
     method add_child n = Queue.push n children
     method has_children = not (Queue.is_empty children)
 
-    val mutable css_indent : int = 2
+    val mutable css_indent : int = 0
+    val mutable css_betweenlines : int = 1
 
     method! get_style ~style ~ctx =
       super#get_style ~style ~ctx;
-      if List.mem "component" el.cls
-        then css_indent <- 2
-        else css_indent <- 0
+      let _ = if List.mem "component" el.cls then css_indent <- 2 in
+      let _ = if List.mem "definition" el.cls then css_betweenlines <- 0 in
+      ()
 
     method fmt ~ppf ~style ~ctx =
       self#get_style ~style ~ctx;
@@ -37,8 +38,9 @@ class body_node cls =
       pp_open_hbox ppf ();
       pp_print_string ppf (String.make css_indent ' ');
       pp_open_vbox ppf 0;
+      let sep = fun ppf u -> for _ = 0 to css_betweenlines do pp_print_cut ppf u done in
       let nodes = List.rev (Queue.fold (Fun.flip List.cons) [] children) in
-      pp_print_list (fun ppf n -> n#fmt ~ppf ~style ~ctx:(el::ctx)) ppf nodes;
+      pp_print_list ?pp_sep:(Some sep) (fun ppf n -> n#fmt ~ppf ~style ~ctx:(el::ctx)) ppf nodes;
       pp_close_box ppf ();
       pp_close_box ppf ()
     end;;

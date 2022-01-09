@@ -38,10 +38,6 @@ let error_recovery =
   let doc = "Enable Coq's error recovery inside tactics and commands." in
   Arg.(value & flag & info [ "error-recovery" ] ~doc)
 
-let quick =
-  let doc = "Skip checking opaque proofs (very experimental)." in
-  Arg.(value & flag & info [ "quick" ] ~doc)
-
 let prelude =
   let doc = "Load Coq.Init.Prelude from $(docv); plugins/ and theories/ should live there." in
   Arg.(value & opt string Coq_config.coqlib & info [ "coqlib" ] ~docv:"COQPATH" ~doc)

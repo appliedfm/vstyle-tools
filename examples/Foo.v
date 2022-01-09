@@ -24,6 +24,10 @@ Module MyModule.
         easy.
     Qed.
 
+    Lemma five__eq__five__again:
+        five = 5.
+    easy. Qed.
+
     Definition add_em (x y: nat):
         nat
     := x + y

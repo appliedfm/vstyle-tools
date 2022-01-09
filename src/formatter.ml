@@ -20,13 +20,31 @@ let format_doc ~style ~in_file ~in_chan ~doc ~sid =
         | Some ast -> ast
         | None -> raise End_of_input
       in
-      (* Format.printf "%s\n" (formatter_pp_to_debug_string (formatter_pp_sentence ast)); *)
-      out_doc#add_vernac ast;
-      try
-        let doc, n_st, tip = Stm.add ~doc ~ontop:sid false ast in
-        if tip <> `NewTip then CErrors.user_err ?loc:ast.loc Pp.(str "fatal, got no `NewTip`");
-        stt := (doc, n_st)
-      with exn -> raise exn
+      let doc, _ =
+        try
+          let doc, n_st, tip = Stm.add ~doc ~ontop:sid false ast in
+          if tip <> `NewTip then CErrors.user_err ?loc:ast.loc Pp.(str "fatal, got no `NewTip`");
+          let doc = Stm.observe ~doc sid in
+          stt := (doc, n_st);
+          !stt
+        with exn -> raise exn
+      in
+      let proof_state = Stm.get_proof ~doc sid in
+      Format.printf
+        "[proof_state:%B %s] %s\n"
+        (Option.has_some proof_state)
+        (match ast.v.expr with
+          | VernacDefinition _ -> "VernacDefinition"
+          | VernacStartTheoremProof _ -> "VernacStartTheoremProof"
+          | VernacDefineModule _ -> "VernacDefineModule"
+          | VernacDeclareModule _ -> "VernacDeclareModule"
+          | VernacDeclareModuleType _ -> "VernacDeclareModuleType"
+          | VernacEndSegment _ -> "VernacEndSegment"
+          | VernacEndProof _ -> "VernacEndProof"
+          | _ -> "(other vernac)"
+        )
+        (formatter_pp_to_string (formatter_pp_sentence ast));
+      out_doc#add_vernac proof_state ast;
     done;
     !stt;
   with

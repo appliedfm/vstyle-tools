@@ -1,4 +1,4 @@
-let create_document ~in_file ~stm_flags ~quick ~ml_load_path ~vo_load_path ~debug ~allow_sprop =
+let create_document ~in_file ~stm_flags ~ml_load_path ~vo_load_path ~debug ~allow_sprop =
   let open Sertop.Sertop_init in
   (* coq initialization *)
   coq_init
@@ -21,15 +21,9 @@ let create_document ~in_file ~stm_flags ~quick ~ml_load_path ~vo_load_path ~debu
     { stm_options with async_proofs_tac_error_resilience = `None; async_proofs_cmd_error_resilience = false }
   in
 
-  let stm_options = if quick then { stm_options with async_proofs_mode = APonLazy } else stm_options in
-
   let injections = [ Coqargs.RequireInjection ("Coq.Init.Prelude", None, Some false) ] in
 
   let ndoc = { Stm.doc_type = Stm.VoDoc in_file; injections; stm_options } in
-
-  (* Workaround, see
-     https://github.com/ejgallego/coq-serapi/pull/101 *)
-  if quick || stm_flags.enable_async <> None then Safe_typing.allow_delayed_constants := true;
 
   Stm.new_doc ndoc
 
@@ -50,7 +44,7 @@ let close_document ~doc ~pstate =
   let _doc = Stm.join ~doc in
   check_pending_proofs ~pstate
 
-let driver debug disallow_sprop async async_workers error_recovery quick coq_path ml_path load_path rload_path in_file
+let driver debug disallow_sprop async async_workers error_recovery coq_path ml_path load_path rload_path in_file
     omit_loc omit_att omit_env exn_on_opaque =
   (* initialization *)
   let options = Serlib.Serlib_init.{ omit_loc; omit_att; exn_on_opaque; omit_env } in
@@ -63,7 +57,7 @@ let driver debug disallow_sprop async async_workers error_recovery quick coq_pat
   let allow_sprop = not disallow_sprop in
   let stm_flags = { Sertop.Sertop_init.enable_async = async; deep_edits = false; async_workers; error_recovery } in
 
-  let doc, sid = create_document ~in_file ~stm_flags ~quick ~ml_load_path ~vo_load_path ~debug ~allow_sprop in
+  let doc, sid = create_document ~in_file ~stm_flags ~ml_load_path ~vo_load_path ~debug ~allow_sprop in
 
   (* main loop *)
   let style = Css.Parser.parse_stylesheet Style.basic in
@@ -83,7 +77,7 @@ let main () =
   let coqfmt_cmd =
     let open Arg in
     ( Cmdliner.Term.(
-        const driver $ debug $ disallow_sprop $ async $ async_workers $ error_recovery $ quick $ prelude
+        const driver $ debug $ disallow_sprop $ async $ async_workers $ error_recovery $ prelude
         $ ml_include_path $ load_path $ rload_path $ input_file $ omit_loc $ omit_att $ omit_env $ exn_on_opaque),
       Cmdliner.Term.info "coqfmt" ~version:coqfmt_version ~doc:coqfmt_doc ~man:coqfmt_man )
   in

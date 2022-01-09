@@ -16,8 +16,6 @@ val async_workers : int Cmdliner.Term.t
 
 val error_recovery : bool Cmdliner.Term.t
 
-val quick : bool Cmdliner.Term.t
-
 val prelude : string Cmdliner.Term.t
 
 val ml_include_path : string list Cmdliner.Term.t
