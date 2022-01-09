@@ -7,23 +7,37 @@ Definition five:
  := 5
 .
 
-Lemma five__eq__five:
-    five = 5.
-Proof.
-    easy.
-Qed.
+Module MyEmptyModule.
+End MyEmptyModule.
 
-Definition add_em (x y: nat):
-    nat
- := x + y
-.
+Module NestedMod_1.
+    Module NestedMod_2.
+        Module NestedMod_3.
+        End NestedMod_3.
+    End NestedMod_2.
+End NestedMod_1.
 
-Definition add_em_2 x := add_em x.
+Module MyModule.
+    Lemma five__eq__five:
+        five = 5.
+    Proof.
+        easy.
+    Qed.
 
-Arguments add_em [_].
+    Definition add_em (x y: nat):
+        nat
+    := x + y
+    .
+
+    Definition add_em_2 x := add_em x.
+
+    Arguments add_em [_].
+End MyModule.
 
 From Coq Require Import Lists.List.
 Import ListNotations.
+
+Import MyModule.
 
 Definition listy_five:
     list nat

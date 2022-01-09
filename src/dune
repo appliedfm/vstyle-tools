@@ -1,4 +1,4 @@
 (executable
  (name coqformat)
  (flags :standard -linkall -rectypes)
- (libraries base coq-serapi.serapi_v8_14 coq-serapi.sertop_v8_12 stdio))
+ (libraries base css-parser coq-serapi.serapi_v8_14 coq-serapi.sertop_v8_12 stdio))

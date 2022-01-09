@@ -13,6 +13,7 @@
  (synopsis "A source formatter for Coq")
  (description "A source formatter for Coq, built to support https://vstyle.readthedocs.io")
  (depends
+  (css-parser (>= 2.5))
   (coq-serapi (>= 8.14.0+0.14.0))
   (dune (> 1.5))
   (stdio (>= v0.14.0))

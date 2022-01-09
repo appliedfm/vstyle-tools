@@ -66,8 +66,9 @@ let driver debug disallow_sprop async async_workers error_recovery quick coq_pat
   let doc, sid = create_document ~in_file ~stm_flags ~quick ~ml_load_path ~vo_load_path ~debug ~allow_sprop in
 
   (* main loop *)
+  let style = Css.Parser.parse_stylesheet Style.basic in
   let in_chan = open_in in_file in
-  let doc, _sid = Formatter.format_doc ~in_file ~in_chan ~doc ~sid in
+  let doc, _sid = Formatter.format_doc ~style ~in_file ~in_chan ~doc ~sid in
   let pstate = match Stm.state_of_id ~doc sid with `Valid (Some { Vernacstate.lemmas; _ }) -> lemmas | _ -> None in
   let () = close_document ~doc ~pstate in
   ()
