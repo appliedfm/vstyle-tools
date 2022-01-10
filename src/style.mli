@@ -22,9 +22,9 @@ class virtual node :
 
     method get_el : element
 
-    method get_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method load_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
 
-    method virtual fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method virtual styled_pp : ppf:Format.formatter -> ctx:context -> unit
   end
 
 class virtual grouping_node :
@@ -34,9 +34,9 @@ class virtual grouping_node :
 
     method virtual add_child : node -> unit
 
-    method get_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method load_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
 
-    method virtual fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method virtual styled_pp : ppf:Format.formatter -> ctx:context -> unit
   end
 
 val basic : string

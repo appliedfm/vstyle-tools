@@ -8,9 +8,9 @@ class doc_node :
     val css_margin : int
     val css_max_indent : int
 
-    method get_style : style:Css.Types.Stylesheet.t -> ctx:Style.context -> unit
+    method load_style : style:Css.Types.Stylesheet.t -> ctx:Style.context -> unit
 
-    method fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> ctx:Style.context -> unit
+    method styled_pp : ppf:Format.formatter -> ctx:Style.context -> unit
   end;;
 
 type grouping =
@@ -26,6 +26,6 @@ class doctree :
   object
     method get_stack_length : int
     method load_style : style:Css.Types.Stylesheet.t -> unit
-    method fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> unit
+    method styled_pp : ppf:Format.formatter -> unit
     method add_vernac : Proof.t option -> Vernacexpr.vernac_control_r CAst.t -> unit
   end;;

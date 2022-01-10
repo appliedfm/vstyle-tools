@@ -29,12 +29,12 @@ class virtual node el_init =
 
     method get_el : element = el
 
-    method get_style ~style ~ctx =
+    method load_style ~style ~ctx =
       let _ : Css.Types.Stylesheet.t = style in
       let _ : context = ctx in
       ()
 
-    method virtual fmt : ppf:formatter -> style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method virtual styled_pp : ppf:formatter -> ctx:context -> unit
   end;;
 
 class virtual grouping_node el_init =
@@ -43,9 +43,9 @@ class virtual grouping_node el_init =
 
     method virtual add_child : node -> unit
 
-    method! get_style ~style ~ctx = super#get_style ~style ~ctx
+    method! load_style ~style ~ctx = super#load_style ~style ~ctx
 
-    method virtual fmt : ppf:formatter -> style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method virtual styled_pp : ppf:formatter -> ctx:context -> unit
   end;;
 
 let basic =

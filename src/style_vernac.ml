@@ -12,9 +12,9 @@ class vernac_node v_init =
 
     val v : Vernacexpr.vernac_control_r CAst.t = v_init
 
-    method! get_style ~style ~ctx = super#get_style ~style ~ctx
+    method! load_style ~style ~ctx = super#load_style ~style ~ctx
 
-    method fmt ~ppf ~style:_ ~ctx:_ =
+    method styled_pp ~ppf ~ctx:_ =
       pp_open_hvbox ppf 1;
       Pp.pp_with ppf (Ppvernac.pr_vernac v);
       pp_close_box ppf ()

@@ -59,6 +59,6 @@ let format_doc ~style ~in_file ~in_chan ~doc ~sid =
         "Done building doctree; stack size: %d\n"
         out_doc#get_stack_length;
       out_doc#load_style ~style;
-      out_doc#fmt ~ppf ~style;
+      out_doc#styled_pp ~ppf;
       Format.pp_print_newline ppf ();
       !stt

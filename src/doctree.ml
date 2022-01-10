@@ -12,11 +12,11 @@ class doc_node body_init =
     val css_margin : int = 120
     val css_max_indent : int = 20
 
-    method! get_style ~style ~ctx =
-      super#get_style ~style ~ctx;
-      body#get_style ~style ~ctx:(el::ctx)
+    method! load_style ~style ~ctx =
+      super#load_style ~style ~ctx;
+      body#load_style ~style ~ctx:(el::ctx)
 
-    method fmt ~ppf ~style ~ctx =
+    method styled_pp ~ppf ~ctx =
       Format.pp_set_max_boxes ppf 0;
       Format.pp_set_geometry
         ppf
@@ -24,7 +24,7 @@ class doc_node body_init =
         ~margin:css_margin;
 
       Format.pp_open_vbox ppf 0;
-      body#fmt ~ppf ~style ~ctx:(el::ctx);
+      body#styled_pp ~ppf ~ctx:(el::ctx);
       Format.pp_close_box ppf ();
   end;;
 
@@ -64,9 +64,9 @@ class doctree =
 
     method get_stack_length : int = Stack.length stack
 
-    method load_style ~style = doc#get_style ~style ~ctx:[]
+    method load_style ~style = doc#load_style ~style ~ctx:[]
 
-    method fmt ~ppf ~style = doc#fmt ~ppf ~style ~ctx:[]
+    method styled_pp ~ppf = doc#styled_pp ~ppf ~ctx:[]
 
     method private is_definition proof_state expr =
       match proof_state, expr with

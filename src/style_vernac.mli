@@ -7,7 +7,7 @@ class vernac_node :
 
     val v : Vernacexpr.vernac_control_r CAst.t
 
-    method get_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method load_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
 
-    method fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method styled_pp : ppf:Format.formatter -> ctx:context -> unit
   end

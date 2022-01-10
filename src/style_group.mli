@@ -8,11 +8,9 @@ class body_node :
     method add_child : node -> unit
     method has_children : bool
 
-    method set_css_indent : int -> unit
+    method load_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
 
-    method get_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
-
-    method fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method styled_pp : ppf:Format.formatter -> ctx:context -> unit
   end
 
 class component_node :
@@ -24,7 +22,7 @@ class component_node :
     method add_child : node -> unit
     method set_footer : node -> unit
 
-    method get_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method load_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
 
-    method fmt : ppf:Format.formatter -> style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method styled_pp : ppf:Format.formatter -> ctx:context -> unit
   end
