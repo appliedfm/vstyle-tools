@@ -18,7 +18,7 @@ type grouping =
   | GComponent of Style_group.component_node
 
 exception WrongGrouping
-val as_grouping : grouping -> Style_group.grouping_node
+val as_grouping : grouping -> Style.grouping_node
 val as_body : grouping -> Style_group.body_node
 val as_component : grouping -> Style_group.component_node
 

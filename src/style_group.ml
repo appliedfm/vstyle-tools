@@ -1,17 +1,6 @@
 open Format
 open Style
 
-class virtual grouping_node el_init =
-  object
-    inherit node el_init as super
-
-    method virtual add_child : node -> unit
-
-    method! get_style ~style ~ctx = super#get_style ~style ~ctx
-
-    method virtual fmt : ppf:formatter -> style:Css.Types.Stylesheet.t -> ctx:context -> unit
-  end;;
-
 class body_node cls =
   object
     inherit grouping_node

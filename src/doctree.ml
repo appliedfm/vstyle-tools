@@ -36,8 +36,8 @@ exception WrongGrouping
   
 let as_grouping g =
   match g with
-  | GBody n -> (n :> Style_group.grouping_node)
-  | GComponent n -> (n :> Style_group.grouping_node)
+  | GBody n -> (n :> Style.grouping_node)
+  | GComponent n -> (n :> Style.grouping_node)
 
 let as_body g =
   match g with
