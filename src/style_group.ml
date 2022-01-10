@@ -35,9 +35,9 @@ class component_node cls =
       { ty = NodeTy_Component; cls = cls; id = None }
       as super
 
-    val mutable css_hf_body_indent : int = 2
-    val mutable css_h_body_indent : int = 0
-    val mutable css_f_body_indent : int = 0
+    val mutable css_body_indent_hf : int = 2
+    val mutable css_body_indent_h : int = 0
+    val mutable css_body_indent_f : int = 0
     val mutable css_body_indent : int = 0
 
     val mutable header : node option = None
@@ -74,17 +74,17 @@ class component_node cls =
         let pp_h = pp_gen h in
         let pp_f = pp_gen f in
         pp_open_vbox ppf 0;
-        pp_print_list (fun x f -> f x) ppf ([pp_h] @ pp_b css_hf_body_indent @ [pp_f]);
+        pp_print_list (fun x f -> f x) ppf ([pp_h] @ pp_b css_body_indent_hf @ [pp_f]);
         pp_close_box ppf ();
       | Some h, None ->
         let pp_h = pp_gen h in
         pp_open_hbox ppf ();
-        pp_print_list ?pp_sep:(Some pp_print_space) (fun x f -> f x) ppf ([pp_h] @ pp_b css_h_body_indent);
+        pp_print_list ?pp_sep:(Some pp_print_space) (fun x f -> f x) ppf ([pp_h] @ pp_b css_body_indent_h);
         pp_close_box ppf ();
       | None, Some f ->
         let pp_f = pp_gen f in
         pp_open_vbox ppf 0;
-        pp_print_list (fun ppf f -> f ppf) ppf (pp_b css_f_body_indent @ [pp_f]);
+        pp_print_list (fun ppf f -> f ppf) ppf (pp_b css_body_indent_f @ [pp_f]);
         pp_close_box ppf ();
       | None, None ->
         pp_print_list (fun x f -> f x) ppf (pp_b css_body_indent);

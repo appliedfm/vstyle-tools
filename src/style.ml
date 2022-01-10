@@ -49,18 +49,29 @@ let basic =
 {|
   doc {
     margin: 120;
-    tab-spaces: 2;
+    max-indent: 20;
   }
 
   body {
-    indent: 0
+    betweenlines: 1;
   }
 
-  body#component {
-    indent: 1;
+  body#definition {
+    betweenlines: 0;
   }
 
-  vernac {
-    dot: sameline;
+  body#proof {
+    betweenlines: 0;
+  }
+
+  body#proof-bullet {
+    betweenlines: 0;
+  }
+
+  component {
+    body-indent-hf: 2;
+    body-indent-h: 0;
+    body-indent-f: 0;
+    body-indent: 0;
   }
 |}
