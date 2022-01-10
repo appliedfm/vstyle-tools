@@ -82,7 +82,7 @@ Lemma ez_1 : True /\ True.
 Proof.
     split.
     { easy. }
-    { easy. }
+    { { + easy. } }
 Qed.
 
 Lemma ez_2 : (True /\ True) /\ True.
