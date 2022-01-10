@@ -101,7 +101,7 @@ Proof.
       + easy.
       + split.
         - split.
-            ** easy.
+            ** { easy. }
         ** easy.
         - split.
         ** easy.
