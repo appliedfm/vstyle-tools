@@ -2,7 +2,7 @@ open CAst
 open Vernacexpr
 
 class doc_node body_init =
-  object
+  object(self)
     inherit Style.node
       { ty = NodeTy_Doc; cls = []; id = None }
       as super
@@ -14,7 +14,7 @@ class doc_node body_init =
 
     method! load_style ~style ~ctx =
       super#load_style ~style ~ctx;
-      body#load_style ~style ~ctx:(el::ctx)
+      body#load_style ~style ~ctx:((self :> Style.node)::ctx)
 
     method styled_pp ~ppf ~ctx =
       Format.pp_set_max_boxes ppf 0;
@@ -24,7 +24,7 @@ class doc_node body_init =
         ~margin:css_margin;
 
       Format.pp_open_vbox ppf 0;
-      body#styled_pp ~ppf ~ctx:(el::ctx);
+      body#styled_pp ~ppf ~ctx:((self :> Style.node)::ctx);
       Format.pp_close_box ppf ();
   end;;
 

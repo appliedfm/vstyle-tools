@@ -20,9 +20,6 @@ type element = {
   id: string option;
 }
 
-type context = element list
-
-
 class virtual node el_init =
   object
     val el : element = el_init
@@ -31,10 +28,10 @@ class virtual node el_init =
 
     method load_style ~style ~ctx =
       let _ : Css.Types.Stylesheet.t = style in
-      let _ : context = ctx in
+      let _ : node list = ctx in
       ()
 
-    method virtual styled_pp : ppf:formatter -> ctx:context -> unit
+    method virtual styled_pp : ppf:formatter -> ctx:node list -> unit
   end;;
 
 class virtual grouping_node el_init =
@@ -45,7 +42,7 @@ class virtual grouping_node el_init =
 
     method! load_style ~style ~ctx = super#load_style ~style ~ctx
 
-    method virtual styled_pp : ppf:formatter -> ctx:context -> unit
+    method virtual styled_pp : ppf:formatter -> ctx:node list -> unit
   end;;
 
 let basic =

@@ -2,7 +2,7 @@ open Format
 open Style
 
 class body_node cls =
-  object
+  object(self)
     inherit grouping_node
       { ty = NodeTy_Body; cls = cls; id = None }
       as super
@@ -19,18 +19,18 @@ class body_node cls =
       let _ = if List.mem "definition" el.cls then css_betweenlines <- 0 in
       let _ = if List.mem "proof" el.cls then css_betweenlines <- 0 in
       let _ = if List.mem "proof-bullet" el.cls then css_betweenlines <- 0 in
-      Queue.iter (fun n -> n#load_style ~style ~ctx:(el::ctx)) children
+      Queue.iter (fun n -> n#load_style ~style ~ctx:((self :> node)::ctx)) children
 
     method styled_pp ~ppf ~ctx =
       pp_open_vbox ppf 0;
       let sep = fun ppf u -> for _ = 0 to css_betweenlines do pp_print_cut ppf u done in
       let nodes = List.rev (Queue.fold (Fun.flip List.cons) [] children) in
-      pp_print_list ?pp_sep:(Some sep) (fun ppf n -> n#styled_pp ~ppf ~ctx:(el::ctx)) ppf nodes;
+      pp_print_list ?pp_sep:(Some sep) (fun ppf n -> n#styled_pp ~ppf ~ctx:((self :> node)::ctx)) ppf nodes;
       pp_close_box ppf ()
     end;;
 
 class component_node cls =
-  object
+  object(self)
     inherit grouping_node
       { ty = NodeTy_Component; cls = cls; id = None }
       as super
@@ -50,12 +50,12 @@ class component_node cls =
 
     method! load_style ~style ~ctx =
       super#load_style ~style ~ctx;
-      Option.iter (fun n -> n#load_style ~style ~ctx:(el::ctx)) header;
-      body#load_style ~style ~ctx:(el::ctx);
-      Option.iter (fun n -> n#load_style ~style ~ctx:(el::ctx)) footer;
+      Option.iter (fun n -> n#load_style ~style ~ctx:((self :> node)::ctx)) header;
+      body#load_style ~style ~ctx:((self :> node)::ctx);
+      Option.iter (fun n -> n#load_style ~style ~ctx:((self :> node)::ctx)) footer;
 
     method styled_pp ~ppf ~ctx =
-      let pp_gen n ppf' = n#styled_pp ~ppf:ppf' ~ctx:(el::ctx) in
+      let pp_gen n ppf' = n#styled_pp ~ppf:ppf' ~ctx:((self :> node)::ctx) in
       let pp_b indent =
         if body#has_children then
           [

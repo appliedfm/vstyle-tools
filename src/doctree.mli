@@ -8,9 +8,9 @@ class doc_node :
     val css_margin : int
     val css_max_indent : int
 
-    method load_style : style:Css.Types.Stylesheet.t -> ctx:Style.context -> unit
+    method load_style : style:Css.Types.Stylesheet.t -> ctx:Style.node list -> unit
 
-    method styled_pp : ppf:Format.formatter -> ctx:Style.context -> unit
+    method styled_pp : ppf:Format.formatter -> ctx:Style.node list -> unit
   end;;
 
 type grouping =

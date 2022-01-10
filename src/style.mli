@@ -12,9 +12,6 @@ type element = {
   id: string option;
 }
 
-type context = element list
-
-
 class virtual node :
   element ->
   object
@@ -22,9 +19,9 @@ class virtual node :
 
     method get_el : element
 
-    method load_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method load_style : style:Css.Types.Stylesheet.t -> ctx:node list -> unit
 
-    method virtual styled_pp : ppf:Format.formatter -> ctx:context -> unit
+    method virtual styled_pp : ppf:Format.formatter -> ctx:node list -> unit
   end
 
 class virtual grouping_node :
@@ -34,9 +31,9 @@ class virtual grouping_node :
 
     method virtual add_child : node -> unit
 
-    method load_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit
+    method load_style : style:Css.Types.Stylesheet.t -> ctx:node list -> unit
 
-    method virtual styled_pp : ppf:Format.formatter -> ctx:context -> unit
+    method virtual styled_pp : ppf:Format.formatter -> ctx:node list -> unit
   end
 
 val basic : string
