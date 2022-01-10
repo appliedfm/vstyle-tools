@@ -102,8 +102,7 @@ class doctree =
       | _, VernacEndSubproof -> true
       | _ -> false
 
-    method add_vernac proof_state ({v = {control = _; attrs = _; expr}; loc = _} as v) =
-      let _ : Proof.t option = proof_state in
+    method add_vernac (proof_state : Proof.t option) ({v = {control = _; attrs = _; expr}; loc = _} as v) =
       if List.mem "definition" (as_grouping (Stack.top stack))#get_el.cls then begin
         let is_sticky = self#is_proof proof_state expr in
         if not is_sticky then ignore (Stack.pop stack)
