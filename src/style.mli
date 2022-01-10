@@ -20,6 +20,8 @@ class virtual node :
   object
     val el : element
 
+    method get_el : element
+
     val mutable css_tab_spaces : int
 
     method get_style : style:Css.Types.Stylesheet.t -> ctx:context -> unit

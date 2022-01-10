@@ -41,6 +41,9 @@ let format_doc ~style ~in_file ~in_chan ~doc ~sid =
           | VernacDeclareModuleType _ -> "VernacDeclareModuleType"
           | VernacEndSegment _ -> "VernacEndSegment"
           | VernacEndProof _ -> "VernacEndProof"
+          | VernacBullet _ -> "VernacBullet"
+          | VernacSubproof _ -> "VernacSubproof"
+          | VernacEndSubproof -> "VernacEndSubproof"
           | _ -> "(other vernac)"
         )
         (formatter_pp_to_string (formatter_pp_sentence ast));
@@ -51,6 +54,7 @@ let format_doc ~style ~in_file ~in_chan ~doc ~sid =
   (* | Stack.Empty -> *)
   | End_of_input ->
       let ppf = Format.std_formatter in
+      out_doc#load_style ~style;
       out_doc#fmt ~ppf ~style;
       Format.pp_print_newline ppf ();
       !stt

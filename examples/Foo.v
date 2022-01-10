@@ -77,3 +77,36 @@ Definition fifty: float := 5E1.
 From Coq Require Import Strings.String.
 
 Definition a_string: string := ("foo")%string.
+
+Lemma ez_1 : True /\ True.
+Proof.
+    split.
+    { easy. }
+    { easy. }
+Qed.
+
+Lemma ez_2 : (True /\ True) /\ True.
+Proof.
+    split.
+    * split.
+      + easy.
+      + easy.
+    * easy.
+Qed.
+
+Lemma ez_3 : (True /\ ((True /\ True) /\ (True /\ True))) /\ (True /\ True).
+Proof.
+    split.
+    * split.
+      + easy.
+      + split.
+        - split.
+            ** easy.
+        ** easy.
+        - split.
+        ** easy.
+        ** easy.
+    * split.
+    - easy.
+    - easy.
+Qed.

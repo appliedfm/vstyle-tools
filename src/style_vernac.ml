@@ -9,7 +9,7 @@ type vernac_dot =
   | VernacDot_Newline
 
 class vernac_node v_init =
-  object(self)
+  object
     inherit node
       { ty = NodeTy_Vernac; cls = []; id = None }
       as super
@@ -20,9 +20,7 @@ class vernac_node v_init =
 
     method! get_style ~style ~ctx = super#get_style ~style ~ctx
 
-    method fmt ~ppf ~style ~ctx =
-      self#get_style ~style ~ctx;
-
+    method fmt ~ppf ~style:_ ~ctx:_ =
       pp_open_hvbox ppf 1;
       Pp.pp_with ppf (Ppvernac.pr_vernac v);
       pp_close_box ppf ()

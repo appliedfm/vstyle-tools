@@ -27,6 +27,8 @@ class virtual node el_init =
   object
     val el : element = el_init
 
+    method get_el : element = el
+
     val mutable css_tab_spaces : int = 2
 
     method get_style ~style ~ctx =

@@ -2,7 +2,7 @@ open CAst
 open Vernacexpr
 
 class doc_node body_init =
-  object(self)
+  object
     inherit Style.node
       { ty = NodeTy_Doc; cls = []; id = None }
       as super
@@ -12,11 +12,11 @@ class doc_node body_init =
     val css_margin : int = 120
     val css_max_indent : int = 20
 
-    method! get_style ~style ~ctx = super#get_style ~style ~ctx
+    method! get_style ~style ~ctx =
+      super#get_style ~style ~ctx;
+      body#get_style ~style ~ctx:(el::ctx)
 
     method fmt ~ppf ~style ~ctx =
-      self#get_style ~style ~ctx;
-
       Format.pp_set_max_boxes ppf 0;
       Format.pp_set_geometry
         ppf
@@ -49,6 +49,8 @@ let as_component g =
   | GBody _ -> raise WrongGrouping
   | GComponent n -> n
 
+exception ExpectedBullet
+
 class doctree =
   let doc_body_init = new Style_group.body_node ["root"] in
   let doc_init = new doc_node doc_body_init in
@@ -57,7 +59,10 @@ class doctree =
     val doc : doc_node = doc_init
     val stack : grouping Stack.t = stack_init
     val mutable last_definition : Style_group.body_node option = None
+    val bullet_stack : Proof_bullet.t list ref Stack.t = Stack.create ()
     initializer Stack.push (GBody doc_body_init) stack_init
+
+    method load_style ~style = doc#get_style ~style ~ctx:[]
 
     method fmt ~ppf ~style = doc#fmt ~ppf ~style ~ctx:[]
 
@@ -73,30 +78,38 @@ class doctree =
       | _, VernacDeclareModule _ 
       | _, VernacDeclareModuleType _ -> true
       | _ -> false
-  
+
+    method private is_bullet proof_state expr =
+      match proof_state, expr with
+      | _, VernacBullet _ -> true
+      | _ -> false
+
     method private is_proof proof_state expr =
       match proof_state, expr with
-      | Some _, _ -> true
+      | Some _, _
+      | _, VernacSubproof _ -> true
       | _ -> false
 
     method private is_end proof_state expr =
       match proof_state, expr with
       | _, VernacEndSegment _
       | _, VernacEndProof _ -> true
+      | _, VernacEndSubproof -> true
       | _ -> false
-
 
     method add_vernac proof_state ({v = {control = _; attrs = _; expr}; loc = _} as v) =
       let _ : Proof.t option = proof_state in
+      let retain_last_definition = ref false in
       if self#is_definition proof_state expr then begin
         let top_g = as_grouping (Stack.top stack) in
         let def_b = new Style_group.body_node ["definition"] in
         last_definition <- Some def_b;
         def_b#add_child (new Style_vernac.vernac_node v);
-        top_g#add_child ((def_b :> Style.node))
+        top_g#add_child ((def_b :> Style.node));
+        retain_last_definition := true
       end else if self#is_module proof_state expr then begin
         let top_g = as_grouping (Stack.top stack) in
-        let new_g = new Style_group.component_node [] in
+        let new_g = new Style_group.component_node ["module"] in
         top_g#add_child (new_g :> Style.node);
         Stack.push (GComponent new_g) stack;
         new_g#set_header (new Style_vernac.vernac_node v)
@@ -106,20 +119,42 @@ class doctree =
           | None -> as_grouping (Stack.top stack)
           | Some g -> (g :> Style_group.grouping_node)
         in
-        let new_g = new Style_group.component_node [] in
+        let new_g = new Style_group.component_node ["proof"] in
         last_g#add_child (new_g :> Style.node);
         Stack.push (GComponent new_g) stack;
         let _ =
           match expr with
-          | VernacProof _ -> new_g#set_header (new Style_vernac.vernac_node v)
+          | VernacProof _
+          | VernacSubproof _ -> new_g#set_header (new Style_vernac.vernac_node v)
           | _ -> new_g#add_child (new Style_vernac.vernac_node v)
-        in ()
+        in
+        Stack.push (ref []) bullet_stack;
+        retain_last_definition := true
+      end else if self#is_bullet proof_state expr then begin
+        let bullets = Stack.pop bullet_stack in
+        let bullet = match expr with | VernacBullet b -> b | _ -> raise ExpectedBullet in
+        while List.mem bullet !bullets do begin
+          bullets := List.tl !bullets;
+          ignore (Stack.pop stack)
+        end done;
+        let top_g = as_grouping (Stack.top stack) in
+        let new_g = new Style_group.component_node ["proof-bullet"] in
+        top_g#add_child (new_g :> Style.node);
+        Stack.push (GComponent new_g) stack;
+        new_g#set_header (new Style_vernac.vernac_node v);
+        bullets := bullet :: !bullets;
+        Stack.push bullets bullet_stack
       end else if self#is_end proof_state expr then begin
+        while List.mem "proof-bullet" (as_grouping (Stack.top stack))#get_el.cls do begin
+          ignore (Stack.pop stack)
+        end done;
         let top_g = as_component (Stack.pop stack) in
+        (* remove all of the bullets from the stack *)
         top_g#set_footer (new Style_vernac.vernac_node v);
+        if List.mem "proof" (top_g#get_el).cls then ignore (Stack.pop bullet_stack)
       end else begin
           let top_g = as_grouping (Stack.top stack) in
           top_g#add_child (new Style_vernac.vernac_node v)
       end;
-      if not (self#is_definition proof_state expr) then last_definition <- None
+      if not (!retain_last_definition) then last_definition <- None
   end;;
