@@ -110,3 +110,18 @@ Proof.
     - easy.
     - easy.
 Qed.
+
+
+Check ez_3.
+
+Require Import Program.
+
+Program Definition my_prog : { x | x < 0 } := exist _ _ _.
+Next Obligation.
+exact 1.
+Defined.
+Next Obligation.
+admit.
+Admitted.
+
+Print my_prog.

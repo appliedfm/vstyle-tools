@@ -34,6 +34,7 @@ let format_doc ~style ~in_file ~in_chan ~doc ~sid =
         "[proof_state:%B %s] %s\n"
         (Option.has_some proof_state)
         (match ast.v.expr with
+          | VernacExtend ((n, i), _) -> Printf.sprintf "VernacExtend(%s, %d)" n i
           | VernacDefinition _ -> "VernacDefinition"
           | VernacStartTheoremProof _ -> "VernacStartTheoremProof"
           | VernacDefineModule _ -> "VernacDefineModule"
@@ -54,6 +55,9 @@ let format_doc ~style ~in_file ~in_chan ~doc ~sid =
   (* | Stack.Empty -> *)
   | End_of_input ->
       let ppf = Format.std_formatter in
+      Format.printf
+        "Done building doctree; stack size: %d\n"
+        out_doc#get_stack_length;
       out_doc#load_style ~style;
       out_doc#fmt ~ppf ~style;
       Format.pp_print_newline ppf ();
