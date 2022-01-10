@@ -29,8 +29,6 @@ class virtual node el_init =
 
     method get_el : element = el
 
-    val mutable css_tab_spaces : int = 2
-
     method get_style ~style ~ctx =
       let _ : Css.Types.Stylesheet.t = style in
       let _ : context = ctx in

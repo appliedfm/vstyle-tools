@@ -4,10 +4,6 @@ open Style
 (* open CAst *)
 (* open Vernacexpr *)
 
-type vernac_dot =
-  | VernacDot_Sameline
-  | VernacDot_Newline
-
 class vernac_node v_init =
   object
     inherit node
@@ -15,8 +11,6 @@ class vernac_node v_init =
       as super
 
     val v : Vernacexpr.vernac_control_r CAst.t = v_init
-
-    val css_dot_placement : vernac_dot = VernacDot_Sameline
 
     method! get_style ~style ~ctx = super#get_style ~style ~ctx
 
