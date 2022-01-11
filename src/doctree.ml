@@ -1,20 +1,32 @@
+open Style
+
 open CAst
 open Vernacexpr
 
 class doc_node body_init =
   object(self)
-    inherit Style.node
+    inherit node
       { ty = NodeTy_Doc; cls = []; id = None }
       as super
 
     val body : Style_group.body_node = body_init
 
-    val css_margin : int = 120
-    val css_max_indent : int = 20
+    val mutable css_margin : int = 120
+    val mutable css_max_indent : int = 20
 
     method! load_style ~style ~ctx =
       super#load_style ~style ~ctx;
-      body#load_style ~style ~ctx:((self :> Style.node)::ctx)
+      css_margin <- (
+        match css_get_last (css_get_property ~style ~ctx (self :> node) "margin") with
+        | Some (Css.Types.Component_value.Number n) -> int_of_string n
+        | _ -> css_margin
+      );
+      css_max_indent <- (
+        match css_get_last (css_get_property ~style ~ctx (self :> node) "max-indent") with
+        | Some (Css.Types.Component_value.Number n) -> int_of_string n
+        | _ -> css_max_indent
+      );
+      body#load_style ~style ~ctx:((self :> node)::ctx)
 
     method styled_pp ~ppf ~ctx =
       Format.pp_set_max_boxes ppf 0;
@@ -24,7 +36,7 @@ class doc_node body_init =
         ~margin:css_margin;
 
       Format.pp_open_vbox ppf 0;
-      body#styled_pp ~ppf ~ctx:((self :> Style.node)::ctx);
+      body#styled_pp ~ppf ~ctx:((self :> node)::ctx);
       Format.pp_close_box ppf ();
   end;;
 
@@ -36,8 +48,8 @@ exception WrongGrouping
   
 let as_grouping g =
   match g with
-  | GBody n -> (n :> Style.grouping_node)
-  | GComponent n -> (n :> Style.grouping_node)
+  | GBody n -> (n :> grouping_node)
+  | GComponent n -> (n :> grouping_node)
 
 let as_body g =
   match g with
@@ -111,18 +123,18 @@ class doctree =
         let top_g = as_grouping (Stack.top stack) in
         let def_b = new Style_group.body_node ["definition"] in
         def_b#add_child (new Style_vernac.vernac_node v);
-        top_g#add_child ((def_b :> Style.node));
+        top_g#add_child ((def_b :> node));
         Stack.push (GBody def_b) stack;
       end else if self#is_module proof_state expr then begin
         let top_g = as_grouping (Stack.top stack) in
         let new_g = new Style_group.component_node ["module"] in
-        top_g#add_child (new_g :> Style.node);
+        top_g#add_child (new_g :> node);
         Stack.push (GComponent new_g) stack;
         new_g#set_header (new Style_vernac.vernac_node v)
       end else if self#is_proof proof_state expr then begin
         let top_g = as_grouping (Stack.top stack) in
         let new_g = new Style_group.component_node ["proof"] in
-        top_g#add_child (new_g :> Style.node);
+        top_g#add_child (new_g :> node);
         Stack.push (GComponent new_g) stack;
         let _ =
           match expr with
@@ -141,7 +153,7 @@ class doctree =
         end done;
         let top_g = as_grouping (Stack.top stack) in
         let new_g = new Style_group.component_node ["proof-bullet"] in
-        top_g#add_child (new_g :> Style.node);
+        top_g#add_child (new_g :> node);
         Stack.push (GComponent new_g) stack;
         new_g#set_header (new Style_vernac.vernac_node v);
         bullets := bullet :: !bullets;

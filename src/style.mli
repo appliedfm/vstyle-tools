@@ -4,8 +4,6 @@ type node_ty =
   | NodeTy_Component
   | NodeTy_Vernac
 
-val pp_node_ty : Format.formatter -> node_ty -> unit
-
 type element = {
   ty: node_ty;
   cls: string list;
@@ -35,5 +33,9 @@ class virtual grouping_node :
 
     method virtual styled_pp : ppf:Format.formatter -> ctx:node list -> unit
   end
+
+val css_get_property : style:Css.Types.Stylesheet.t -> ctx:node list -> node -> string -> Css.Types.Component_value.t Css.Types.with_loc list Css.Types.with_loc list
+
+val css_get_last : Css.Types.Component_value.t Css.Types.with_loc list Css.Types.with_loc list -> Css.Types.Component_value.t option
 
 val basic : string

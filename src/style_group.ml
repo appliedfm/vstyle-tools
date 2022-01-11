@@ -16,9 +16,11 @@ class body_node cls =
 
     method! load_style ~style ~ctx =
       super#load_style ~style ~ctx;
-      let _ = if List.mem "definition" el.cls then css_betweenlines <- 0 in
-      let _ = if List.mem "proof" el.cls then css_betweenlines <- 0 in
-      let _ = if List.mem "proof-bullet" el.cls then css_betweenlines <- 0 in
+      css_betweenlines <- (
+        match css_get_last (css_get_property ~style ~ctx (self :> node) "betweenlines") with
+        | Some (Css.Types.Component_value.Number n) -> int_of_string n
+        | _ -> css_betweenlines
+      );
       Queue.iter (fun n -> n#load_style ~style ~ctx:((self :> node)::ctx)) children
 
     method styled_pp ~ppf ~ctx =
@@ -50,6 +52,26 @@ class component_node cls =
 
     method! load_style ~style ~ctx =
       super#load_style ~style ~ctx;
+      css_body_indent_hf <- (
+        match css_get_last (css_get_property ~style ~ctx (self :> node) "body-indent-hf") with
+        | Some (Css.Types.Component_value.Number n) -> int_of_string n
+        | _ -> css_body_indent_hf
+      );
+      css_body_indent_h <- (
+        match css_get_last (css_get_property ~style ~ctx (self :> node) "body-indent-h") with
+        | Some (Css.Types.Component_value.Number n) -> int_of_string n
+        | _ -> css_body_indent_h
+      );
+      css_body_indent_f <- (
+        match css_get_last (css_get_property ~style ~ctx (self :> node) "body-indent-f") with
+        | Some (Css.Types.Component_value.Number n) -> int_of_string n
+        | _ -> css_body_indent_f
+      );
+      css_body_indent <- (
+        match css_get_last (css_get_property ~style ~ctx (self :> node) "body-indent") with
+        | Some (Css.Types.Component_value.Number n) -> int_of_string n
+        | _ -> css_body_indent
+      );
       Option.iter (fun n -> n#load_style ~style ~ctx:((self :> node)::ctx)) header;
       body#load_style ~style ~ctx:((self :> node)::ctx);
       Option.iter (fun n -> n#load_style ~style ~ctx:((self :> node)::ctx)) footer;
