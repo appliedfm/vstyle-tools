@@ -6,19 +6,26 @@ A formatter/linter for Coq source.
 
 https://vstyle.readthedocs.io
 
+# Installing
+
+```console
+$ opam install src/coq-vstyle.opam
+$ coqformat --help
+```
+
 # Building & running
 
 ```console
 $ cd src
 /src$ dune build
-/src$ ./_build/default/coqformat.exe --help
+/src$ dune exec ./coqformat.exe -- --help
 ```
 
 # Example
 
 ```console
 $ cd src
-/src$ ./_build/default/coqformat.exe ../examples/Foo.v
+/src$ dune exec ./coqformat.exe -- ../examples/Foo.v
 ```
 
 # Formatting the source

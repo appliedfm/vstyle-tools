@@ -79,7 +79,7 @@ let main () =
     ( Cmdliner.Term.(
         const driver $ debug $ disallow_sprop $ async $ async_workers $ error_recovery $ prelude
         $ ml_include_path $ load_path $ rload_path $ input_file $ omit_loc $ omit_att $ omit_env $ exn_on_opaque),
-      Cmdliner.Term.info "coqfmt" ~version:coqfmt_version ~doc:coqfmt_doc ~man:coqfmt_man )
+      Cmdliner.Term.info "coqformat" ~version:coqfmt_version ~doc:coqfmt_doc ~man:coqfmt_man )
   in
 
   try match Cmdliner.Term.eval ~catch:false coqfmt_cmd with `Error _ -> exit 1 | `Version | `Help | `Ok () -> exit 0

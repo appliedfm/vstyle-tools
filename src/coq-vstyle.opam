@@ -10,10 +10,7 @@ license: "MIT"
 homepage: "https://github.com/appliedfm/vstyle-tools"
 bug-reports: "https://github.com/appliedfm/vstyle-tools/issues"
 depends: [
-  "css-parser" {>= "2.5"}
-  "coq-serapi" {>= "8.14.0+0.14.0"}
   "dune" {>= "2.9" & > "1.5"}
-  "stdio" {>= "v0.14.0"}
   "odoc" {with-doc}
 ]
 build: [
