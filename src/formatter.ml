@@ -30,6 +30,7 @@ let format_doc ~style ~in_file ~in_chan ~doc ~sid =
         with exn -> raise exn
       in
       let proof_state = Stm.get_proof ~doc sid in
+      (* 
       Format.printf
         "[proof_state:%B %s] %s\n"
         (Option.has_some proof_state)
@@ -48,6 +49,7 @@ let format_doc ~style ~in_file ~in_chan ~doc ~sid =
           | _ -> "(other vernac)"
         )
         (formatter_pp_to_string (formatter_pp_sentence ast));
+      *)
       out_doc#add_vernac proof_state ast;
     done;
     !stt;
